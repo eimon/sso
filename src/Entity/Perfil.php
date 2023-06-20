@@ -24,7 +24,7 @@ class Perfil
     #[ORM\ManyToMany(targetEntity: Rol::class, inversedBy: 'roles')]
     private Collection $roles;
 
-    public function __construct($nombre)
+    public function __construct($nombre = null)
     {
         $this->nombre = $nombre;
         $this->roles = new ArrayCollection();
@@ -81,5 +81,10 @@ class Perfil
         $this->roles->removeElement($role);
 
         return $this;
+    }
+
+    public function __toString()
+    {
+        return $this->nombre;
     }
 }

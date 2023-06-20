@@ -21,10 +21,7 @@ class Rol
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $descripcion = null;
 
-    #[ORM\ManyToMany(targetEntity: Perfil::class, mappedBy: 'roles')]
-    private Collection $roles;
-
-    public function __construct($nombre)
+    public function __construct($nombre = null)
     {
         $this->nombre = $nombre;
         $this->roles = new ArrayCollection();
@@ -59,30 +56,8 @@ class Rol
         return $this;
     }
 
-    /**
-     * @return Collection<int, Perfil>
-     */
-    public function getRoles(): Collection
+    public function __toString()
     {
-        return $this->roles;
-    }
-
-    public function addRole(Perfil $role): static
-    {
-        if (!$this->roles->contains($role)) {
-            $this->roles->add($role);
-            $role->addRole($this);
-        }
-
-        return $this;
-    }
-
-    public function removeRole(Perfil $role): static
-    {
-        if ($this->roles->removeElement($role)) {
-            $role->removeRole($this);
-        }
-
-        return $this;
+        return $this->nombre;
     }
 }

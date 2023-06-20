@@ -2,6 +2,16 @@ version: '3'
 
 services:
 ###> doctrine/doctrine-bundle ###
+  web:
+      image: gebler/web
+      build:
+        dockerfile: ./Dockerfile
+        context: .
+        args:
+          WITH_XDEBUG: "true" # Change to "true" to install and enable xdebug in the container
+      container_name: oauth-sso
+      volumes:
+        - ./:/var/www/application
   database:
     image: postgres:${POSTGRES_VERSION:-15}-alpine
     environment:
