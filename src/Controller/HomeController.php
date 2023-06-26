@@ -18,18 +18,12 @@ class HomeController extends AbstractController{
         $this->entityManager = $entityManager;
     }
 
-    public function getUsers(){
-        $repository = $this->entityManager->getRepository(Usuario::class);
-        $entities = $repository->findAll();
-        return $entities;
-    }
-
     #[Route('/', name: 'app_home')]
     public function index(): Response
     {
-        return $this->render('home/index.html.twig', [
-            'controller_name' => 'HomeController',
-            'usuarios' => $this->getUsers()
-        ]);
+        if($this->getUser())
+            return $this->redirect('usuario');
+        else
+            return $this->redirect('login');
     }
 }

@@ -8,7 +8,7 @@ security:
         app_user_provider:
             entity:
                 class: App\Entity\Usuario
-                property: email
+                property: nombre
         # used to reload user from session & other features (e.g. switch_user)
     firewalls:
         dev:
@@ -23,12 +23,25 @@ security:
 
             # https://symfony.com/doc/current/security/impersonating_user.html
             # switch_user: true
+            form_login:
+                # "app_login" is the name of the route created previously
+                login_path: app_login
+                check_path: app_login
+                enable_csrf: true
+
+            logout:
+                path: app_logout
+            
+            json_login:
+                # api_login is a route we will create below
+                check_path: api_login
 
     # Easy way to control access for large sections of your site
     # Note: Only the *first* access control that matches will be used
     access_control:
-        # - { path: ^/admin, roles: ROLE_ADMIN }
-        # - { path: ^/profile, roles: ROLE_USER }
+        - { path: ^/usuario, roles: ROLE_ADMINISTRADOR }
+        - { path: ^/perfil, roles: ROLE_ADMINISTRADOR }
+        - { path: ^/rol, roles: ROLE_ADMINISTRADOR }
 
 when@test:
     security:

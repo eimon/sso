@@ -19,7 +19,7 @@ class AppFixtures extends Fixture
     public function load(ObjectManager $manager): void
     {
         
-        $rol = new Rol('ROLE_USER');
+        $rol = new Rol('ROLE_ADMINISTRADOR');
         $perfil = new Perfil('Administrador');
         $perfil->addRole($rol);
         $usuario = new Usuario();
