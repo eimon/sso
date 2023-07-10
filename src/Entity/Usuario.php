@@ -6,6 +6,7 @@ use App\Repository\UsuarioRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Uid\Uuid;
 
 #[ORM\Entity(repositoryClass: UsuarioRepository::class)]
 class Usuario implements UserInterface, PasswordAuthenticatedUserInterface
@@ -31,8 +32,8 @@ class Usuario implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 30)]
     private ?string $nombre = null;
 
-    #[ORM\Column(length: 255, nullable: true)]
-    private ?string $uuid = null;
+    #[ORM\Column(type: "uuid", unique: true)]
+    private ?Uuid $uuid = null;
 
     public function getId(): ?int
     {
@@ -56,9 +57,13 @@ class Usuario implements UserInterface, PasswordAuthenticatedUserInterface
      *
      * @see UserInterface
      */
+    // public function getUserIdentifier(): string
+    // {
+    //     return (string) $this->email;
+    // }
     public function getUserIdentifier(): string
     {
-        return (string) $this->email;
+        return $this->uuid->toRfc4122();
     }
 
     /**
@@ -131,7 +136,7 @@ class Usuario implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->uuid;
     }
 
-    public function setUuid(?string $uuid): static
+    public function setUuid(Uuid $uuid): self
     {
         $this->uuid = $uuid;
 

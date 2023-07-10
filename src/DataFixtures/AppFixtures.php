@@ -8,6 +8,8 @@ use Doctrine\Persistence\ObjectManager;
 use App\Entity\Rol;
 use App\Entity\Perfil;
 use App\Entity\Usuario;
+use Symfony\Component\Uid\UuidV1;
+
 
 class AppFixtures extends Fixture
 {
@@ -27,6 +29,7 @@ class AppFixtures extends Fixture
         $usuario->setNombre('admin');
         $usuario->setPassword($this->passwordHasherFactory->getPasswordHasher(Usuario::class)->hash('pass'));
         $usuario->setPerfil($perfil);
+        $usuario->setUuid(new UuidV1());
         
         $manager->persist($rol);
         $manager->persist($perfil);

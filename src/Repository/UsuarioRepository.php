@@ -6,8 +6,10 @@ use App\Entity\Usuario;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
+use Symfony\Bridge\Doctrine\Security\User\UserLoaderInterface;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\PasswordUpgraderInterface;
+use Symfony\Component\Uid\Uuid;
 
 /**
  * @extends ServiceEntityRepository<Usuario>
@@ -17,7 +19,7 @@ use Symfony\Component\Security\Core\User\PasswordUpgraderInterface;
  * @method Usuario[]    findAll()
  * @method Usuario[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class UsuarioRepository extends ServiceEntityRepository implements PasswordUpgraderInterface
+class UsuarioRepository extends ServiceEntityRepository implements PasswordUpgraderInterface, UserLoaderInterface
 {
     public function __construct(ManagerRegistry $registry)
     {
@@ -54,6 +56,20 @@ class UsuarioRepository extends ServiceEntityRepository implements PasswordUpgra
         $user->setPassword($newHashedPassword);
 
         $this->save($user, true);
+    }
+
+    public function loadUserByIdentifier(string $identifier): ?Usuario
+    {
+        $entityManager = $this->getEntityManager();
+
+        // Check if the identifier is an email address
+        if (filter_var($identifier, FILTER_VALIDATE_EMAIL)) {
+            return $this->findOneBy(['email' => $identifier]);
+        }
+        if (Uuid::isValid($identifier)) {
+            return $this->findOneBy(['uuid' => Uuid::fromString($identifier)->toBinary()]);
+        }
+        return null;
     }
 
 //    /**
